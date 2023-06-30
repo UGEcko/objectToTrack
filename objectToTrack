@@ -1,0 +1,72 @@
+// deno-lint-ignore-file no-explicit-any
+import { CustomEvent, optimizeAnimation, OptimizeSettings, parseFilePath } from "https://deno.land/x/remapper@3.1.1/src/mod.ts" 
+import { writeJsonSync, readJsonSync, } from "https://deno.land/std@0.66.0/fs/mod.ts";
+
+interface ObjectData {
+    pos: number[];
+    rot: number[];
+    scale: number[];
+    color: number[];
+    track?: string;
+  }
+  interface AnimationSegment {
+    start: number[];
+    end: number[];
+  }
+enum returnProperties {
+  "Position",
+  "Rotation"
+}
+const optimSettings = new OptimizeSettings()
+optimSettings.passes = 5
+optimSettings.active = true
+optimSettings.performance_log = false
+
+const Prop = returnProperties
+function processArray(filePath: string, track:string, returnProp: returnProperties, logObjectToFile?:string) {
+  const inputPath = parseFilePath(filePath, ".rmmodel").path; // Thanks swifter this helped lots :)
+  const fileContent:any = readJsonSync(inputPath)
+        const filteredObjects = fileContent.objects.filter( 
+          (obj: ObjectData) => obj.track === track
+        )
+        const optimizedPos = optimizeAnimation(filteredObjects.map((obj: ObjectData) => obj.pos), optimSettings)
+        const optimizedRot = optimizeAnimation(filteredObjects.map((obj: ObjectData) => obj.rot), optimSettings)
+        if(logObjectToFile) {
+          writeJsonSync(logObjectToFile,filteredObjects) //Does NOT write the optimized keyframes to the file, only the object when its first found
+          console.log(`Written object to ${logObjectToFile}`)
+        }
+        if(returnProp == Prop.Position) {
+          return optimizedPos
+        } else if (returnProp == Prop.Rotation) {
+          return optimizedRot
+        }
+}
+
+function validateRmmodel(fileName: string): boolean {
+  const inputPath = parseFilePath(fileName, ".rmmodel").path; // Thanks swifter this helped lots :)
+  if(`${fileName}.rmmodel` == inputPath || fileName == inputPath) { // Support input of both example.rmmodel and just example.
+    return true
+  } else {
+    return false
+  }
+}
+
+/**
+ * @param  {string} envFile rmmodel of the environment
+ * @param  {number} time time of the environment
+ * @param  {number} durationOffset the duration of the environment or animation
+ * @param  {string} track the material of the object in blender
+ * @param  {string} gameTrack the players track in-game
+ * @param  {string} logObjectToFile? logs the objects pos and rot to a file
+ */
+export function objectToTrack(envFile: string, time: number, durationOffset: number, track: string, gameTrack:string, logObjectToFile?:string) {
+if (validateRmmodel(envFile) == true) {
+  const fuckass = new CustomEvent(time).animateTrack(gameTrack,durationOffset)
+  fuckass.animate.position = processArray(envFile,track, Prop.Position,logObjectToFile)
+  fuckass.animate.rotation = processArray(envFile,track,Prop.Rotation,logObjectToFile)
+  fuckass.push()
+} else {
+  console.error(`Invalid file. Expected .rmmodel`)
+}
+
+}
