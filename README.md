@@ -1,6 +1,3 @@
-# Remapper-Extended
-A repo that has extended features for Remapper 3.1.1+
-
 
 ## Object to track (like camera-to-player from scuffedwalls)
 This works by filtering out the objects in the .rmmodel, then it individually filters out the position, and rotation to be turned into a animTrack.
