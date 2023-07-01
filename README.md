@@ -15,7 +15,7 @@ Parameters (All params are in jsDocs when used)
 
 Use this import: 
 
-`import { objectToTrack } from 'https://raw.githubusercontent.com/UGEcko/Remapper-Extended/main/objectToTrack'`
+`import { objectToTrack } from 'https://raw.githubusercontent.com/UGEcko/objectToTrack/main/objectToTrack.ts'`
 
 MAKE SURE to set the time and duration of this to the same time and duration of the environment. If its static then subtract the time of the next environment to the current one for the duration.
 
