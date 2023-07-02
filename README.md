@@ -31,11 +31,11 @@ If you get an error similar to this, this most likely means **your rmmodel is me
 
 ![image](https://github.com/UGEcko/objectToTrack/assets/38820051/ba789897-34f9-4519-bbf8-786f2625f160)
 
-
+If you get this error, this means **you havent typed in the rmmodel correctly**. Please type it like this: `example` OR `example.rmmodel`
 
 If you encounter any other issues, please contact ugecko on discord. Thank you
 
-If you get this error, this means **you havent typed in the rmmodel correctly**. Please type it like this: `example` OR `example.rmmodel`
+
 
 
 
