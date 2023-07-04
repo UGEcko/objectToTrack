@@ -1,5 +1,5 @@
 
-## Object to track (like camera-to-player from scuffedwalls)
+## Object to track (like camera-to-player from scuffedwalls) (Deprecated please use [updated version](https://github.com/UGEcko/objectToTrack/tree/main))
 This works by filtering out the objects in the .rmmodel, then it individually filters out the position, and rotation to be turned into a animTrack.
 
 Example: `objectToTrack('environment',0,100, 'Player', 'Player', 'log.object')`
@@ -15,7 +15,7 @@ Parameters (All params are in jsDocs when used)
 
 Use this import: 
 
-`import { objectToTrack } from 'https://raw.githubusercontent.com/UGEcko/objectToTrack/main/objectToTrack.ts'`
+`import { objectToTrack } from 'https://raw.githubusercontent.com/UGEcko/objectToTrack/deprecated/objectToTrackLegacy.ts'`
 
 MAKE SURE to set the time and duration of this to the same time and duration of the environment. If its static then subtract the time of the next environment to the current one for the duration.
 
