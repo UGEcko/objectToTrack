@@ -10,7 +10,7 @@ export function validateRmmodel(fileName: string): boolean {
   }
 }
 
-export function processArray(filePath: string, track:string, returnProp: returnProperties, logObjectToFile?:string) {
+export function processArray(filePath: string, track:string, returnProp: returnProperties, logObjectToFile?:boolean) {
 
   try {
     const inputPath = parseFilePath(filePath, ".rmmodel").path; // Thanks swifter this helped lots :)
@@ -21,8 +21,8 @@ export function processArray(filePath: string, track:string, returnProp: returnP
 
   
         if(logObjectToFile) {
-          writeJsonSync(logObjectToFile,filteredObjects) //Does NOT write the optimized keyframes to the file, only the object when its first found (RAW)
-          console.log(`Written object to ${logObjectToFile}`)
+          writeJsonSync('ott.log',filteredObjects) //Does NOT write the optimized keyframes to the file, only the object when its first found (RAW)
+          console.log(`Written object to ott.log`)
         }
           if(returnProp == Prop.Position) {
             return Position
