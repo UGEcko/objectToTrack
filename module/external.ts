@@ -59,4 +59,5 @@ export enum returnProperties {
   "Position",
   "Rotation"
 }
+export const Prop = returnProperties
 
