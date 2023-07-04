@@ -1,5 +1,5 @@
 // deno-lint-ignore-file no-explicit-any
-import { CustomEvent, optimizeAnimation, OptimizeSettings, parseFilePath, KeyframesVec3} from "https://deno.land/x/remapper@3.1.1/src/mod.ts" 
+import { CustomEvent, parseFilePath, KeyframesVec3} from "https://deno.land/x/remapper@3.1.1/src/mod.ts" 
 import { writeJsonSync, readJsonSync } from "https://deno.land/std@0.66.0/fs/mod.ts";
 
 
@@ -13,42 +13,22 @@ interface ObjectData {
 interface Item {
   property: string;
 }
-
 enum returnProperties {
   "Position",
   "Rotation"
 }
-const optimSettings = new OptimizeSettings()
-optimSettings.passes = 5
-optimSettings.active = true
-optimSettings.performance_log = true
-optimSettings.optimizeSimilarPoints.active = true
-
 const Prop = returnProperties
-function processArray(filePath: string, track:string, returnProp: returnProperties, logObjectToFile?:string) {
-
-  try {
-    const inputPath = parseFilePath(filePath, ".rmmodel").path; // Thanks swifter this helped lots :)
-  const fileContent:any = readJsonSync(inputPath)
-  const filteredObjects = fileContent.objects.filter((obj: ObjectData) => obj.track === track);
-  const [optimizedPos]: KeyframesVec3 = optimizeAnimation(filteredObjects.map((obj: ObjectData) => obj.pos), optimSettings);
-  const [optimizedRot]: KeyframesVec3 = optimizeAnimation(filteredObjects.map((obj: ObjectData) => obj.rot), optimSettings);
-
-        if(logObjectToFile) {
-          writeJsonSync(logObjectToFile,filteredObjects) //Does NOT write the optimized keyframes to the file, only the object when its first found
-          console.log(`Written object to ${logObjectToFile}`)
-        }
-          if(returnProp == Prop.Position) {
-            return optimizedPos
-            } else if (returnProp == Prop.Rotation) {
-              return optimizedRot
-            }
-
-  } catch(error) {
-    console.error(`objectToTrack PROCESSARRAY ERROR: ${error}`)
-  }
+function roundArray(arr: any[], decimalPlaces: number): any[] {
+  return arr.map((x: any) => {
+    if (Array.isArray(x)) {
+      return roundArray(x, decimalPlaces); 
+    } else if (typeof x === 'number') {
+      return Number(x.toFixed(decimalPlaces));
+    } else {
+      return x;
+    }
+  });
 }
-
 function validateRmmodel(fileName: string): boolean {
   const inputPath = parseFilePath(fileName, ".rmmodel").path; // Thanks swifter this helped lots :)
   if(`${fileName}.rmmodel` == inputPath || fileName == inputPath) { // Support input of both example.rmmodel and just example.
@@ -57,6 +37,34 @@ function validateRmmodel(fileName: string): boolean {
     return false
   }
 }
+
+
+function processArray(filePath: string, track:string, returnProp: returnProperties, logObjectToFile?:string) {
+
+  try {
+    const inputPath = parseFilePath(filePath, ".rmmodel").path; // Thanks swifter this helped lots :)
+  const fileContent:any = readJsonSync(inputPath)
+  const filteredObjects = fileContent.objects.filter((obj: ObjectData) => obj.track === track);
+  const Position: number[][] = roundArray(filteredObjects.map((obj: ObjectData) => obj.pos),3);
+  const Rotation: number[][] = roundArray(filteredObjects.map((obj: ObjectData) => obj.rot),3);
+
+  
+        if(logObjectToFile) {
+          writeJsonSync(logObjectToFile,filteredObjects) //Does NOT write the optimized keyframes to the file, only the object when its first found (RAW)
+          console.log(`Written object to ${logObjectToFile}`)
+        }
+          if(returnProp == Prop.Position) {
+            return Position
+            } else if (returnProp == Prop.Rotation) {
+              return Rotation
+            }
+
+  } catch(error) {
+    console.error(`objectToTrack PROCESSARRAY ERROR: ${error}`)
+  }
+}
+
+
 
 /**
  * @param  {string} envFile rmmodel of the environment
