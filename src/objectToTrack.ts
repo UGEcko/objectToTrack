@@ -12,7 +12,13 @@ export class objectToTrack {
     private bsTrack?: string;
     private positionIncluded?: boolean = true;
     private rotationIncluded?: boolean = true;
-
+  /**
+   * Constructs a new objectToTrack instance.
+   * @param {string} input - The .rmmodel file from which to copy properties.
+   * @param {number} time - The starting time of the keyframes. Should match the startTime of the associated environment.
+   * @param {number} duration - The duration of the animation track. Should match the duration of the associated environment.
+   * @param {string} track - The track (material) of the object in blender that is to be copied.
+   */
     constructor(input: string, time: number, duration: number, track: string) {
         this.input = input;
         this.time = time;
@@ -36,6 +42,10 @@ export class objectToTrack {
             console.error(`Invalid file. Expected .rmmodel`)
           }
     }
+    /**
+   * Logs the object properties to a file. (Unfiltered)
+   * @param {string} [logFile='ott.log'] - The name of the log file to which the log will be written. If not provided, it will log to a default file.
+   */
     log(logFile?:string) {
       let file
       if(logFile) {
