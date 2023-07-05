@@ -1,4 +1,4 @@
-import {parseFilePath, KeyframesVec3} from "https://deno.land/x/remapper@3.1.1/src/mod.ts" 
+import {parseFilePath, KeyframesVec3} from "https://deno.land/x/remapper@3.1.2/src/mod.ts" 
 import { writeJsonSync, readJsonSync } from "https://deno.land/std@0.66.0/fs/mod.ts";
 
 export function validateRmmodel(fileName: string): boolean {
