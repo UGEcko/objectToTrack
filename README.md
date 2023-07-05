@@ -1,7 +1,7 @@
 # Object to Track (like camera-to-player from scuffedwalls)
 This utility allows you to track objects in an .rmmodel file by filtering out their position and rotation to create an animTrack.
 
-Note: objectToTrack assumes you are using [Remapper(s latest version)](deno.land/x/remapper/src/mod.ts).
+Note: objectToTrack assumes you are using Remapper(s latest version) 3.1.2.
 ## Usage
 ```import { objectToTrack } from 'https://raw.githubusercontent.com/UGEcko/objectToTrack/main/src/mod.ts'```
 
