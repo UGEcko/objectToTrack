@@ -1,6 +1,6 @@
 // deno-lint-ignore-file no-inferrable-types
 import {validateRmmodel, processArray, returnProperties} from 'https://raw.githubusercontent.com/UGEcko/objectToTrack/main/module/external.ts'
-import { CustomEvent} from "https://deno.land/x/remapper@3.1.1/src/mod.ts" 
+import { CustomEvent} from "https://deno.land/x/remapper@3.1.2/src/mod.ts" 
 
 
 export class objectToTrack {
