@@ -16,8 +16,8 @@ export function processArray(filePath: string, track:string, returnProp: returnP
     const inputPath = parseFilePath(filePath, ".rmmodel").path; // Thanks swifter this helped lots :)
   const fileContent:any = readJsonSync(inputPath)
   const filteredObjects = fileContent.objects.filter((obj: ObjectData) => obj.track === track);
-  const Position: number[][] = roundArray(filteredObjects.map((obj: ObjectData) => obj.pos),3);
-  const Rotation: number[][] = roundArray(filteredObjects.map((obj: ObjectData) => obj.rot),3);
+  const [Position]: number[][] = roundArray(filteredObjects.map((obj: ObjectData) => obj.pos),3);
+  const [Rotation]: number[][] = roundArray(filteredObjects.map((obj: ObjectData) => obj.rot),3);
 
   
         if(logObjectToFile) {
