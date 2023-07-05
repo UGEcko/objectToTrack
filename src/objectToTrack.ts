@@ -1,5 +1,5 @@
 // deno-lint-ignore-file no-inferrable-types
-import {validateRmmodel, processArray, returnProperties} from 'https://raw.githubusercontent.com/UGEcko/objectToTrack/main/module/external.ts'
+import { dev } from 'https://raw.githubusercontent.com/UGEcko/objectToTrack/main/src/mod.ts'
 import { CustomEvent} from "https://deno.land/x/remapper@3.1.2/src/mod.ts" 
 
 
@@ -25,13 +25,13 @@ export class objectToTrack {
     set includeRotation(value: boolean){this.rotationIncluded = value}
 
     push() {
-        const Prop = returnProperties
+        const Prop = dev.returnProperties
         const Btrack = this.bsTrack ? this.bsTrack : this.track
 
-        if (validateRmmodel(this.input) == true) {
+        if (dev.validateRmmodel(this.input) == true) {
             const f = new CustomEvent(this.time).animateTrack(Btrack,this.duration)
-            this.positionIncluded ? f.animate.position = processArray(this.input,Btrack, Prop.Position, this.logToFile) : console.log('Skipped Position')
-            this.rotationIncluded ? f.animate.rotation = processArray(this.input,Btrack,Prop.Rotation) : console.log('Skipped Rotation')
+            this.positionIncluded ? f.animate.position = dev.processArray(this.input,Btrack, Prop.Position, this.logToFile) : console.log('Skipped Position')
+            this.rotationIncluded ? f.animate.rotation = dev.processArray(this.input,Btrack,Prop.Rotation) : console.log('Skipped Rotation')
             f.push()
           } else {
             console.error(`Invalid file. Expected .rmmodel`)
