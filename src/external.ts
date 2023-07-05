@@ -10,26 +10,20 @@ export function validateRmmodel(fileName: string): boolean {
   }
 }
 
-export function processArray(filePath: string, track:string, returnProp: returnProperties, logObjectToFile?:boolean) {
-
+export function processArray(filePath: string, track:string, returnProp: returnProperties) {
   try {
     const inputPath = parseFilePath(filePath, ".rmmodel").path; // Thanks swifter this helped lots :)
   const fileContent:any = readJsonSync(inputPath)
   const filteredObjects = fileContent.objects.filter((obj: ObjectData) => obj.track === track);
-  const [Position]: number[][] = roundArray(filteredObjects.map((obj: ObjectData) => obj.pos),3);
-  const [Rotation]: number[][] = roundArray(filteredObjects.map((obj: ObjectData) => obj.rot),3);
-
-  
-        if(logObjectToFile) {
-          writeJsonSync('ott.log',filteredObjects) //Does NOT write the optimized keyframes to the file, only the object when its first found (RAW)
-          console.log(`Written object to ott.log`)
-        }
+  const [position]: number[][] = roundArray(filteredObjects.map((obj: ObjectData) => obj.pos),3);
+  const [rotation]: number[][] = roundArray(filteredObjects.map((obj: ObjectData) => obj.rot),3);
           if(returnProp == Prop.Position) {
-            return Position
+            return position
             } else if (returnProp == Prop.Rotation) {
-              return Rotation
+              return rotation
+            } else if (returnProp == Prop.FilteredObjects) {
+              return filteredObjects
             }
-
   } catch(error) {
     console.error(`objectToTrack PROCESSARRAY ERROR: ${error}`)
   }
@@ -57,7 +51,8 @@ export interface ObjectData {
 
 export enum returnProperties {
   "Position",
-  "Rotation"
+  "Rotation",
+  "FilteredObjects"
 }
 export const Prop = returnProperties
 
