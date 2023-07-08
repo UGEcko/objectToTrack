@@ -1,7 +1,7 @@
 // deno-lint-ignore-file no-inferrable-types
 import { CustomEvent} from "https://deno.land/x/remapper@3.1.2/src/mod.ts" 
 import { writeJsonSync } from "https://deno.land/std@0.66.0/fs/mod.ts";
-import { Prop, processArray, validateRmmodel, returnProperties } from './external.ts';
+import { Prop, processArray, validateRmmodel, returnProperties, optimizeKeyframes, objectType } from './external.ts';
 
 
 export class objectToTrack {
@@ -9,6 +9,7 @@ export class objectToTrack {
     time: number;
     duration: number;
     track: string;
+    private opFac: number = 0.75;
     private bsTrack?: string;
     private positionIncluded?: boolean = true;
     private rotationIncluded?: boolean = true;
@@ -28,16 +29,29 @@ export class objectToTrack {
     set gameTrack(value: string){this.bsTrack = value}
     set includePosition(value: boolean){this.positionIncluded = value}
     set includeRotation(value: boolean){this.rotationIncluded = value}
-
-    push() {
+    /**
+     * @param  {number} value Optimization factor | 0.75 is default, the lower it is, the more optimized the animation is, however 0 does not count. Must be a decimal
+     */
+    set opFactor(value: number){this.opFac = value}
+    /**
+     * @param  {objectType} type Can be "static" or "animated"
+     */
+    push(type: objectType) {
         const Prop = returnProperties
         const Btrack = this.bsTrack ? this.bsTrack : this.track
 
         if (validateRmmodel(this.input) == true) {
             const f = new CustomEvent(this.time).animateTrack(Btrack,this.duration)
-            this.positionIncluded ? f.animate.position = processArray(this.input,this.track, Prop.Position) : console.log('Skipped Position')
-            this.rotationIncluded ? f.animate.rotation = processArray(this.input,this.track,Prop.Rotation) : console.log('Skipped Rotation')
-            f.push()
+            if(type == "animated") {
+              this.positionIncluded ? f.animate.position = optimizeKeyframes(processArray(this.input,this.track, Prop.Position),this.opFac) : console.log('Skipped Position')
+              this.rotationIncluded ? f.animate.rotation = optimizeKeyframes(processArray(this.input,this.track,Prop.Rotation),this.opFac) : console.log('Skipped Rotation')
+              f.push()
+            } else if(type == "static") {
+              this.positionIncluded ? f.animate.position = optimizeKeyframes(processArray(this.input,this.track, Prop.Position),0.00000001) : console.log('Skipped Position')
+              this.rotationIncluded ? f.animate.rotation = optimizeKeyframes(processArray(this.input,this.track,Prop.Rotation),0.00000001) : console.log('Skipped Rotation')
+              f.push()
+            }
+            
           } else {
             console.error(`Invalid file. Expected .rmmodel`)
           }
